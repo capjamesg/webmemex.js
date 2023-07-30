@@ -82,6 +82,11 @@ class LinkAside extends HTMLElement {
                 outgoingLinks.push(link);
             }
         }
+        // deduplicate
+        outgoingLinks = outgoingLinks.filter(function (link, index, self) {
+            return self.indexOf(link) === index;
+        });
+        
         return outgoingLinks;
     }
 
@@ -91,14 +96,11 @@ class LinkAside extends HTMLElement {
         var comma_delimited_urls = outgoingLinks.map(function (link) {
             return link.href;
         }).join(',');
-
         
         fetch(`https://jamesg.blog/lp/outgoing_links?urls=${comma_delimited_urls}`)
         .then(function (response) {
-            console.log(response);
             return response.json();
         }).then(function (contexts) {
-            console.log(contexts)
             for (var i = 0; i < contexts.length; i++) {
                 var context = contexts[i];
                 var link = outgoingLinks[i];
