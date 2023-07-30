@@ -128,7 +128,9 @@ class LinkAside extends HTMLElement {
                 var entry = `
                 <li class="card">
                     <a href="${link.href}">
+                    ${photo && `
                         <img src="${photo}" alt="${title}" />
+                    `}
                         <h3>${title}</h3>
                         <span>${description}</span>
                     </a>
