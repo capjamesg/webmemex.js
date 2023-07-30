@@ -76,3 +76,11 @@ code {
     padding: 0.25em;
     border-radius: 0.25em;
 }
+button {
+    background-color: #b8c0ff;
+    color: #fff;
+    border: none;
+    padding: 0.5em;
+    border-radius: 0.25em;
+    cursor: pointer;
+}
