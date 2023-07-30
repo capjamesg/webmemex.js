@@ -15,15 +15,21 @@ def outgoing_links():
 
     contexts = []
 
-    if len(urls) > 1:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [
-                executor.submit(indieweb_utils.get_reply_context, [url]) for url in urls
-            ]
-            for future in concurrent.futures.as_completed(futures):
-                contexts.append(future.result())
-    else:
-        contexts.append(indieweb_utils.get_reply_context(urls[0]))
+    # limit to 25 threads
+    urls = urls[:25]
+
+    try:
+        if len(urls) > 1:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
+                futures = [
+                    executor.submit(indieweb_utils.get_reply_context, [url]) for url in urls
+                ]
+                for future in concurrent.futures.as_completed(futures):
+                    contexts.append(future.result())
+        else:
+            contexts.append(indieweb_utils.get_reply_context(urls[0]))
+    except Exception as e:
+        return jsonify([]), 500
 
     return jsonify(contexts)
 

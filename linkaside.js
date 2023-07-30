@@ -122,9 +122,9 @@ class LinkAside extends HTMLElement {
                 var context = contexts[i];
                 var link = outgoingLinks[i];
                 var p = document.createElement('p');
-                var description = context.description || null;
-                var title = context.name || null;
-                var photo = context.photo || null;
+                var description = context.description || "";
+                var title = context.name || "Untitled";
+                var photo = context.photo || "";
                 var entry = `
                 <li class="card">
                     <a href="${link.href}">

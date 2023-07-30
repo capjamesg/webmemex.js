@@ -45,6 +45,60 @@
             <p>Then, add the <code>link-aside</code> HTML component to your web page:</p>
 
             <pre><code>&lt;link-aside&gt;&lt;/link-aside&gt;</code></pre>
+
+            <p><code>linkaside.js</code> makes an API call to a compatible server that returns metadata about provided links. A hosted version at the following URL is the default:</p>
+
+            <pre><code>https://jamesg.blog/lp/outgoing_links</code></pre>
+
+            <p>You can also host your own API server. To do so, download the project GitHub repository and install the server:</p>
+
+            <pre><code>git clone https://github.com/capjamesg/linkaside.js.git
+cd linkaside.js
+pip install -r requirements.txt
+</code></pre>
+
+            <p>Then, you can run the server:</p>
+
+            <pre><code>python3 app.py</code></pre>
+
+            <p>The server opens one API endpoint to which you can make requests:</p>
+
+            <pre><code>https://localhost:5000/outgoing_links?urls=1,2,3...</code></pre>
+
+            <p>The <code>urls</code> parameter is a comma-separated list of URLs to which you want to get metadata.</p>
+
+            <p>Here is an example of a request to the API endpoint:</p>
+            
+            <pre><code>GET https://localhost:5000/outgoing_links?urls=https://github.com/capjamesg/linkaside.js</code></pre>
+
+            <p>The server returns a JSON response with metadata about the provided URLs:</p>
+
+            <pre><code>
+[
+    {
+        "authors": [
+        {
+            "name": "",
+            "photo": "https://github.githubassets.com/favicons/favicon.png",
+            "url": "https://github.com"
+        }
+        ],
+        "description": "Display cards for all of the outgoing links on a web page. - GitHub - capjamesg/linkaside.js: Display cards for all of the outgoing links on a web page.",
+        "name": "GitHub - capjamesg/linkaside.js: Display cards for all of the outgoing links on a web page.",
+        "photo": "https://opengraph.githubassets.com/29d030c09f4d5fae227230ac71988cbb4cc38a2f074d6879996a4553d365e90f/capjamesg/linkaside.js",
+        "post_html": "Search code, repositories, users, issues, pull requests...",
+        "post_text": "Search code, repositories, users, issues, pull requests...",
+        "video": "",
+        "webmention_endpoint": ""
+    }
+    ...
+]
+            </code></pre>
+
+            <p>To configure the URL of the API endpoint, add the <code>data-api-url</code> attribute to the <code>link-aside</code> component:</p>
+
+            <pre><code>&lt;link-aside data-api-url="https://localhost:5000/outgoing_links"&gt;&lt;/link-aside&gt;</code></pre>
+            
             <footer>
                 <p>linkaside.js was made with ❤️, 🧇 and ☕️. <a href="https://github.com/capjamesg/linkaside.js">View source</a>.</p>
             </footer>
