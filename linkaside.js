@@ -11,7 +11,11 @@ class LinkAside extends HTMLElement {
                     line-height: 1.5;
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
                 }
+                .open {
+                    display: block;
+                }
                 aside {
+                    display: none;
                     position: fixed;
                     top: 0;
                     right: 0;
@@ -123,9 +127,14 @@ class LinkAside extends HTMLElement {
         })
     }
 
-    render() {
+    toggle() {
         var outgoingLinks = this.getOutgoingLinks();
         this.getContexts(outgoingLinks);
+        if (this.shadowRoot.querySelector('aside').classList.contains('open')) {
+            this.shadowRoot.querySelector('aside').classList.remove('open');
+        } else {
+            this.shadowRoot.querySelector('aside').classList.add('open');
+        }
     }
 }
 
