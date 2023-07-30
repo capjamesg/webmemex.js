@@ -2,6 +2,8 @@ class LinkAside extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.apiUrl = this.getAttribute('api-url') || 'https://jamesg.blog/lp/outgoing_links';
+
         this.shadowRoot.innerHTML = `
             <style>
                 * {
@@ -63,6 +65,7 @@ class LinkAside extends HTMLElement {
                     margin-bottom: 1rem;
                     border: 1px solid #eee;
                     padding: 1rem;
+                    display: block;
                 }
             </style>
             <aside>
@@ -78,15 +81,20 @@ class LinkAside extends HTMLElement {
         var outgoingLinks = [];
         for (var i = 0; i < links.length; i++) {
             var link = links[i];
-            if (link.host !== window.location.host) {
+            // only http(s) links
+            if (link.host !== window.location.host && link.href.match(/^http/)) {
                 outgoingLinks.push(link);
             }
         }
         // deduplicate
         outgoingLinks = outgoingLinks.filter(function (link, index, self) {
-            return self.indexOf(link) === index;
+            // trim trailing slash
+            var href = link.href.replace(/\/$/, '');
+            return index === self.findIndex(function (l) {
+                return l.href.replace(/\/$/, '') === href;
+            });
         });
-        
+
         return outgoingLinks;
     }
 
@@ -96,11 +104,20 @@ class LinkAside extends HTMLElement {
         var comma_delimited_urls = outgoingLinks.map(function (link) {
             return link.href;
         }).join(',');
+
+        // add loading indicator
+        var loading = document.createElement('p');
+        loading.innerHTML = `<span class="card">Loading...</span>`;
+        loading.id = 'loading';
+        aside.appendChild(loading);
         
-        fetch(`https://jamesg.blog/lp/outgoing_links?urls=${comma_delimited_urls}`)
+        fetch(`${this.apiUrl}?urls=${comma_delimited_urls}`)
         .then(function (response) {
             return response.json();
         }).then(function (contexts) {
+            // remove loading indicator
+            aside.removeChild(loading);
+
             for (var i = 0; i < contexts.length; i++) {
                 var context = contexts[i];
                 var link = outgoingLinks[i];
