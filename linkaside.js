@@ -71,12 +71,6 @@ class LinkAside extends HTMLElement {
                 <ul id="outgoing_links"></ul>
             </aside>
         `;
-
-    }
-
-    connectedCallback() {
-        console.log('connected');
-        this.render();
     }
 
     getOutgoingLinks () {
