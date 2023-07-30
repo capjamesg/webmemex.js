@@ -3,6 +3,7 @@ class LinkAside extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.apiUrl = this.getAttribute('api-url') || 'https://jamesg.blog/lp/outgoing_links';
+        this.links = false;
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -140,11 +141,15 @@ class LinkAside extends HTMLElement {
                 aside.appendChild(p);
             }
         })
+
+        return true;
     }
 
     toggle() {
         var outgoingLinks = this.getOutgoingLinks();
-        this.getContexts(outgoingLinks);
+        if (!this.links) {
+            this.links = this.getContexts(outgoingLinks);
+        }
         if (this.shadowRoot.querySelector('aside').classList.contains('open')) {
             this.shadowRoot.querySelector('aside').classList.remove('open');
         } else {

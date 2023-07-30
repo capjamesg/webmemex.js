@@ -9,7 +9,7 @@ html, body {
 }
 nav {
     background-color: #b8c0ff;
-    color: #fff;
+    color: black;
     padding: 1em;
 }
 nav ul {
@@ -23,7 +23,7 @@ nav li {
     display: inline-block;
 }
 nav a {
-    color: #fff;
+    color: black;
     text-decoration: none;
 }
 nav a:hover {
@@ -42,7 +42,7 @@ input {
 }
 input[type="submit"] {
     background-color: #b8c0ff;
-    color: #fff;
+    color: black;
     border: none;
     cursor: pointer;
 }
@@ -78,9 +78,10 @@ code {
 }
 button {
     background-color: #b8c0ff;
-    color: #fff;
+    color: black;
     border: none;
     padding: 0.5em;
     border-radius: 0.25em;
     cursor: pointer;
+    width: 100%;
 }
