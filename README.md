@@ -1,10 +1,10 @@
-![A screenshot of linkaside.js used on jamesg.blog](screenshot.png)
+![A screenshot of webmemex.js used on jamesg.blog](screenshot.png)
 
-# linkaside.js
+# webmemex.js
 
 Create a sidebar with the outgoing links on a page.
 
-[Read the documentation.](https://capjamesg.github.io/linkaside.js/)
+[Read the documentation.](https://capjamesg.github.io/webmemex.js/)
 
 ## License
 

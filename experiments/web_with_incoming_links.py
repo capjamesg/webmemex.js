@@ -12,14 +12,21 @@ import requests
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify, request
 
+ALLOWED_DOMAINS = ["blog.jamesg"]
+COMMON_CRAWL_LINKS_URL = "https://data.commoncrawl.org/projects/hyperlinkgraph/cc-main-2022-23-sep-nov-jan/domain/cc-main-2022-23-sep-nov-jan-domain-edges.txt.gz"
+COMMON_CRAWL_ENBALED = True #False
+
 conn = sqlite3.connect("/mnt/HC_Volume_35142740/links.db", check_same_thread=False)
 
 app = Flask(__name__)
 
+# if common_crawl is None, download https://data.commoncrawl.org/projects/hyperlinkgraph/cc-main-2022-23-sep-nov-jan/domain/cc-main-2022-23-sep-nov-jan-domain-edges.txt.gz
+# and extract to data/cc-main-2022-23-sep-nov-jan-domain-edges.txt
+
 def get_2nd_degree_outgoing_links(html):
     soup = BeautifulSoup(html, "html.parser")
 
-    outgoing_links = []
+    outgoing_links = ["https://jamesg.blog"]
 
     for link in soup.find_all("a"):
         if link.get("href").startswith("http"):
@@ -31,6 +38,49 @@ def get_2nd_degree_outgoing_links(html):
 @app.route("/")
 def index():
     return jsonify({})
+
+
+@app.route("/incoming_links")
+def incoming_links():
+    url = request.args.get("url")
+    if url is None:
+        return jsonify({"error": "No URL provided"}), 400
+
+    # url_host = urlparse(url).netloc
+    url_host = url
+
+    if url_host not in ALLOWED_DOMAINS:
+        return jsonify({"error": "URL not allowed"}), 400
+
+    if not COMMON_CRAWL_ENBALED:
+        return jsonify({"error": "Common Crawl not enabled"}), 400
+
+    cursor = conn.cursor()
+
+    # get url of every from id for to id
+    cursor.execute(
+        """
+        SELECT ids.url
+        FROM ids
+        INNER JOIN edges ON edges.from_id = ids.id
+        WHERE edges.to_id = (
+            SELECT id
+            FROM ids
+            WHERE url = ?
+        );
+        """,    
+        (url,),
+    )
+
+    incoming_links = cursor.fetchall()
+
+    incoming_links = [link[0] for link in incoming_links]
+
+    # allow CORS
+    response = jsonify({"incoming_links": incoming_links})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 
 @app.route("/outgoing_links")
 def outgoing_links():
@@ -89,14 +139,14 @@ def outgoing_links():
     ]
 
     # allow CORS
-    # response = jsonify(
-    #     {"contexts": contexts, "second_degree_links": second_degree_links}
-    # )
-    # response.headers.add("Access-Control-Allow-Origin", "*")
-    # return response
-    return jsonify(
+    response = jsonify(
         {"contexts": contexts, "second_degree_links": second_degree_links}
     )
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+    # return jsonify(
+    #     {"contexts": contexts, "second_degree_links": second_degree_links}
+    # )
 
 
 if __name__ == "__main__":

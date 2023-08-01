@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>WebMemex Settings</h1>
+        <p>Set your WebMemex server URL below.</p>
+        <label for="server-url">Server URL</label>
+        <input type="text" id="server-url" name="server-url" value="https://localhost:5000">
+        <button id="save">Save</button>
+        <script>
+            const saveButton = document.getElementById('save');
+            const serverUrlInput = document.getElementById('server-url');
+            saveButton.addEventListener('click', () => {
+                const serverUrl = serverUrlInput.value;
+                localStorage.setItem('serverUrl', serverUrl);
+                alert('Saved!');
+            });
+        </script>
+        <button onclick="window.parent.document.querySelector('outgoing-links').toggle()">Try it out</button>
+    </body>
+</html>

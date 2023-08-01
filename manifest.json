@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,
+    "name": "WebMemex",
+    "description": "View incoming and outgoing links related to a web page.",
+    "version": "1.0",
+    "action": {
+      "default_popup": "app.html"
+    },
+    "background": {
+      "scripts": ["webmemex.js"]
+    }
+}

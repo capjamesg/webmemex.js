@@ -1,57 +1,80 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>linkaside.js: Create a sidebar with the outgoing links on a page.</title>
+        <title>webmemex.js: Create a sidebar with the outgoing links on a page.</title>
         
         <meta name="description" content="Create a sidebar with the outgoing links on a page.">
-        <meta property="og:image" content="https://screenshot.jamesg.blog/?url=https://capjamesg.github.io/linkaside.js/">
+        <meta property="og:image" content="https://screenshot.jamesg.blog/?url=https://capjamesg.github.io/webmemex.js/">
 
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <nav>
             <ul>
-                <li><a href="/">linkaside.js</a></li>
+                <li><a href="/">webmemex.js</a></li>
                 <li><a href="https://jamesg.blog">Made by capjamesg</a></li>
             </ul>
         </nav>
         <main>
-            <h1>linkaside.js 🔗</h1>
+            <h1>webmemex.js 🔗</h1>
 
-            <p>linkaside.js is a script you can add to a website to create a sidebar with the outgoing links on a page.</p>
+            <p>webmemex.js is a script you can add to a website to create a sidebar with the incoming and outgoing links on a page.</p>
 
-            <img src="screenshot.png" alt="Screenshot of linkaside.js in use on jamesg.blog">
+            <img src="screenshot.png" alt="Screenshot of webmemex.js in use on jamesg.blog">
 
-            <button onclick="document.querySelector('link-aside').toggle()">Try it out</button>
+            <button onclick="document.querySelector('outgoing-links').toggle()">Try it out</button>
 
             <h2>How it works</h2>
 
-            <p><code>linkaside.js</code> is a script you can add to a website.</p>
-            
-            <p>After loading, you can use JavaScript to show or hide a sidebar with the outgoing links on a page.</p>
+            <p><code>webmemex.js</code> is a script you can add to a website. WebMemex allows you to use two HTML components on your website:</p>
 
-            <p>You can use linkaside.js to more clearly visualize the references on a page.</p>
+            <ul>
+                <li><code>incoming-links</code>: Retrieve incoming links via Webmention or the latest Common Crawl link graph snapshot.</li>
+                <li><code>outgoing-links</code>: Retrieve information about outgoing links in a HTML document.</li>
+            </ul>
+
+            <p>You can use one or both of these components on the same page.</p>
 
             <h2>Setup</h2>
 
-            <p>First, add the <code>linkaside.js</code> script to your website. You can find the script in the <a href="https://github.com/capjamesg/linkaside.js">GitHub repository</a>.</p>
+            <h3>Installation</h3>
+
+            <p>First, add the <code>webmemex.js</code> script to your website. You can find the script in the <a href="https://github.com/capjamesg/webmemex.js">GitHub repository</a>.</p>
 
             <p>Add the script below the closing <code>body</code> tag.</p>
 
-            <pre><code>&lt;script src="linkaside.js"&gt;&lt;/script&gt;</code></pre>
+            <pre><code>&lt;script src="webmemex.js"&gt;&lt;/script&gt;</code></pre>
 
-            <p>Then, add the <code>link-aside</code> HTML component to your web page:</p>
+            <h3>Incoming Links</h3>
 
-            <pre><code>&lt;link-aside&gt;&lt;/link-aside&gt;</code></pre>
+            <p>To add the incoming links component to your website, add the following HTML to your website:</p>
 
-            <p><code>linkaside.js</code> makes an API call to a compatible server that returns metadata about provided links. A hosted version at the following URL is the default:</p>
+            <pre><code>&lt;incoming-links data-api-url="https://webmention.io/api/mentions.jf2?target="&gt;&lt;/incoming-links&gt;</code></pre>
 
-            <pre><code>https://jamesg.blog/lp/outgoing_links</code></pre>
+            <p>You will need to specify an API URL for a WebMemex server. See instructions in the "Set Up a Server" section for more information.</p>
 
-            <p>You can also host your own API server. To do so, download the project GitHub repository and install the server:</p>
+            <h3>Outgoing Links</h3>
 
-            <pre><code>git clone https://github.com/capjamesg/linkaside.js.git
-cd linkaside.js
+            <p>To add the outgoing links component to your website, add the following HTML to your website:</p>
+
+            <pre><code>&lt;outgoing-links data-api-url="https://localhost:5000/outgoing_links"&gt;&lt;/outgoing-links&gt;</code></pre>
+
+            <p>You will need to specify an API URL for a WebMemex server. See instructions in the "Set Up a Server" section for more information.</p>
+
+            <h3>Set Up a WebMemex Server</h3>
+
+            <p><code>webmemex.js</code> makes an API call to a compatible server that returns metadata about provided outgoing links, or information about incoming links. A hosted version at the following URL is the default:</p>
+
+            <p>A hosted version of this server is available for testing at:</p>
+
+            <pre><code>https://jamesg.blog/lp/incoming_links</code></pre>
+
+            <p>We strongly recommend setting up a WebMemex server on your own infrastructure.</p>
+
+            <p>To do so, download the project GitHub repository and install the server:</p>
+
+            <pre><code>git clone https://github.com/capjamesg/webmemex.js.git
+cd webmemex.js
 pip install -r requirements.txt
 </code></pre>
 
@@ -59,15 +82,55 @@ pip install -r requirements.txt
 
             <pre><code>python3 app.py</code></pre>
 
-            <p>The server opens one API endpoint to which you can make requests:</p>
+            <p>The server opens two API endpoint to which you can make requests:</p>
 
-            <pre><code>https://localhost:5000/outgoing_links?urls=1,2,3...</code></pre>
+            <ul>
+                <li><code>/incoming_links?url=url</code>: Retrieve incoming links via Webmention or the latest Common Crawl link graph snapshot.</li>
+                <li><code>/outgoing_links?urls=1,2,3</code>: Retrieve information about outgoing links in a HTML document.</li>
+            </ul>
+
+            <h2>API Reference</h2>
+
+            <h3>Incoming Links</h3>
+
+            <p>The <code>url</code> parameter is the URL of the page for which you want to retrieve incoming links.</p>
+
+            <p>Here is an example of a request to the API endpoint:</p>
+
+            <pre><code>GET https://localhost:5000/incoming_links?url=
+https://capjamesg.github.io/webmemex.js/</code></pre>
+
+            <p>The server returns a JSON response with information about incoming links:</p>
+
+            <pre><code>
+[
+    {
+        "authors": [
+        {
+            "name": "",
+            "photo": "https://github.githubassets.com/favicons/favicon.png",
+            "url": "https://github.com"
+        }
+        ],
+        "description": "Display cards for all of the outgoing links on a web page. - GitHub - capjamesg/webmemex.js: Display cards for all of the outgoing links on a web page.",
+        "name": "GitHub - capjamesg/webmemex.js: Display cards for all of the outgoing links on a web page.",
+        "photo": "https://opengraph.githubassets.com/29d030c09f4d5fae227230ac71988cbb4cc38a2f074d6879996a4553d365e90f/capjamesg/webmemex.js",
+        "post_html": "Search code, repositories, users, issues, pull requests...",
+        "post_text": "Search code, repositories, users, issues, pull requests...",
+        "video": "",
+        "webmention_endpoint": ""
+    }
+    ...
+]
+            </code></pre>
+
+            <h3>Outgoing Links</h3>
 
             <p>The <code>urls</code> parameter is a comma-separated list of URLs to which you want to get metadata.</p>
 
             <p>Here is an example of a request to the API endpoint:</p>
             
-            <pre><code>GET https://localhost:5000/outgoing_links?urls=https://github.com/capjamesg/linkaside.js</code></pre>
+            <pre><code>GET https://localhost:5000/outgoing_links?urls=https://github.com/capjamesg/webmemex.js</code></pre>
 
             <p>The server returns a JSON response with metadata about the provided URLs:</p>
 
@@ -81,9 +144,9 @@ pip install -r requirements.txt
             "url": "https://github.com"
         }
         ],
-        "description": "Display cards for all of the outgoing links on a web page. - GitHub - capjamesg/linkaside.js: Display cards for all of the outgoing links on a web page.",
-        "name": "GitHub - capjamesg/linkaside.js: Display cards for all of the outgoing links on a web page.",
-        "photo": "https://opengraph.githubassets.com/29d030c09f4d5fae227230ac71988cbb4cc38a2f074d6879996a4553d365e90f/capjamesg/linkaside.js",
+        "description": "Display cards for all of the outgoing links on a web page. - GitHub - capjamesg/webmemex.js: Display cards for all of the outgoing links on a web page.",
+        "name": "GitHub - capjamesg/webmemex.js: Display cards for all of the outgoing links on a web page.",
+        "photo": "https://opengraph.githubassets.com/29d030c09f4d5fae227230ac71988cbb4cc38a2f074d6879996a4553d365e90f/capjamesg/webmemex.js",
         "post_html": "Search code, repositories, users, issues, pull requests...",
         "post_text": "Search code, repositories, users, issues, pull requests...",
         "video": "",
@@ -93,15 +156,21 @@ pip install -r requirements.txt
 ]
             </code></pre>
 
+            <incoming-links data-api-url="https://webmention.io/api/mentions.jf2?target="></incoming-links>
+
+            <script>
+                document.querySelector('incoming-links').toggle()
+            </script>
+
             <p>To configure the URL of the API endpoint, add the <code>data-api-url</code> attribute to the <code>link-aside</code> component:</p>
 
             <pre><code>&lt;link-aside data-api-url="https://localhost:5000/outgoing_links"&gt;&lt;/link-aside&gt;</code></pre>
-
             <footer>
-                <p>linkaside.js was made with ❤️, 🧇 and ☕️. <a href="https://github.com/capjamesg/linkaside.js">View source</a>.</p>
+                <p>webmemex.js was made with ❤️, 🧇 and ☕️. <a href="https://github.com/capjamesg/webmemex.js">View source</a>.</p>
             </footer>
         </main>
-        <script src="linkaside.js"></script>
-        <link-aside></link-aside>
+        <outgoing-links data-api-url="http://localhost:5000/outgoing_links"></outgoing-links>
+        <script src="webmemex.js"></script>
+        <a href="https://google.com">Google</a>
     </body>
 </html>
