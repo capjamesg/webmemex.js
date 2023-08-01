@@ -121,7 +121,7 @@ class WebIncomingLinks extends HTMLElement {
     getIncomingLinks () {
         var apiUrl = this.apiUrl;
         var aside = this.shadowRoot.querySelector('#incoming_links');
-        fetch(`${apiUrl}https://jamesg.blog`) // ${window.location.href}`)
+        fetch(`${apiUrl}${window.location.href}`)
         .then(function (response) {
             return response.json();
         }).then(function (data) {
